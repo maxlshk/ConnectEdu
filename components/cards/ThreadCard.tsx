@@ -125,14 +125,19 @@ function ThreadCard({
       {!isComment && comments.length > 0 && (
         <div className='ml-1 mt-3 flex items-center gap-2'>
           {comments.slice(0, 2).map((comment, index) => (
-            <Image
+            <div
               key={index}
-              src={comment.author.image}
-              alt={`user_${index}`}
-              width={24}
-              height={24}
-              className={`${index !== 0 && "-ml-5"} rounded-full object-cover`}
-            />
+              className={`relative overflow-hidden rounded-full ${index !== 0 ? "-ml-5" : ""}`}
+              style={{ width: '24px', height: '24px' }}
+            >
+              <Image
+                src={comment.author.image}
+                alt={`user_${index}`}
+                layout='fill'
+                objectFit='cover'
+                className='rounded-full'
+              />
+            </div>
           ))}
 
           <Link href={`/thread/${id}`}>
@@ -150,7 +155,7 @@ function ThreadCard({
         >
           <p className='text-subtle-medium text-gray-1'>
             {formatDateString(createdAt)}
-            {community && ` - ${community.name} Community`}
+            {community && ` - ${community.name} Class`}
           </p>
 
           <Image
