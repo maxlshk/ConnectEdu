@@ -66,9 +66,9 @@ export async function createThread({ text, author, communityId, path }: Params
     );
 
     const createdThread = await Thread.create({
-      text,
+      text: text.replace(/\n/g, '\r\n'), // Store the text as a multiline string
       author,
-      community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
+      community: communityIdObject, // Assign communityId if provided, or leave it null for a personal account
     });
 
     // Update User model
@@ -192,6 +192,10 @@ export async function fetchThreadById(threadId: string) {
         ],
       })
       .exec();
+
+    if (thread && thread.text) {
+      thread.text = thread.text.replace(/\r\n/g, '\n');
+    }
 
     return thread;
   } catch (err) {
