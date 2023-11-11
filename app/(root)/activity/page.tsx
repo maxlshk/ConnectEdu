@@ -24,13 +24,18 @@ async function Page() {
             {activity.map((activity) => (
               <Link key={activity._id} href={`/thread/${activity.parentId}`}>
                 <article className='activity-card'>
-                  <Image
-                    src={activity.author.image}
-                    alt='user_logo'
-                    width={20}
-                    height={20}
-                    className='rounded-full object-cover'
-                  />
+                  <div
+                    className={`relative overflow-hidden rounded-full`}
+                    style={{ width: '20px', height: '20px' }}
+                  >
+                    <Image
+                      src={activity.author.image}
+                      alt='user_logo'
+                      layout='fill'
+                      objectFit='cover'
+                      className='rounded-full'
+                    />
+                  </div>
                   <p className='!text-small-regular text-light-1'>
                     <span className='mr-1 text-primary-500'>
                       {activity.author.name}
