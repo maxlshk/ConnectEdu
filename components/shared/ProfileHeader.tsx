@@ -54,6 +54,18 @@ function ProfileHeader({
             </div>
           </Link>
         )}
+        {accountId !== authUserId && type !== "Community" && (
+          <Link href='/chat'>
+            <div className='flex cursor-pointer gap-3 rounded-full bg-dark-3 mx-4 px-2 py-2'>
+              <Image
+                src='/assets/chat1.svg'
+                alt='chat'
+                width={70}
+                height={70}
+              />
+            </div>
+          </Link>
+        )}
       </div>
 
       <p className='mt-6 max-w-lg text-base-regular text-light-2'>{bio}</p>

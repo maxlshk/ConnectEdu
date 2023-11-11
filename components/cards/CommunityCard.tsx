@@ -49,7 +49,7 @@ function CommunityCard({ id, name, username, imgUrl, bio, members }: Props) {
             {members.map((member, index) => (
               <div
                 key={index}
-                className={`relative overflow-hidden rounded-full ${index !== 0 ? "-ml-5" : ""}`}
+                className={`relative overflow-hidden rounded-full`}
                 style={{ width: '24px', height: '24px' }}
               >
                 <Image
