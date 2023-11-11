@@ -143,8 +143,14 @@ function ThreadCard({
           <Link href={`/thread/${id}`}>
             <p className='mt-1 text-subtle-medium text-gray-1'>
               {comments.length} repl{comments.length > 1 ? "ies" : "y"}
+              {!community && (
+                <p className='mt-1 text-subtle-medium text-gray-1'>
+                  {formatDateString(createdAt)}
+                </p>
+              )}
             </p>
           </Link>
+
         </div>
       )}
 
@@ -167,6 +173,7 @@ function ThreadCard({
           />
         </Link>
       )}
+
     </article>
   );
 }
