@@ -55,7 +55,7 @@ function ProfileHeader({
           </Link>
         )}
         {accountId !== authUserId && type !== "Community" && (
-          <Link href='/chat'>
+          <Link href={`/chat/${accountId}`}>
             <div className='flex cursor-pointer gap-3 rounded-full bg-dark-3 mx-4 px-2 py-2'>
               <Image
                 src='/assets/chat1.svg'
