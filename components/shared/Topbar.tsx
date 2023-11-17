@@ -7,7 +7,7 @@ function Topbar() {
   return (
     <nav className='topbar'>
       <Link href='/' className='flex items-center gap-4'>
-        <Image src='/Cl5.svg' alt='logo' width={65} height={65} />
+        <Image src='/logo-max.svg' alt='logo' width={45} height={45} />
         <p className='text-heading3-bold text-light-1 max-xs:hidden'>ConnectEdu</p>
       </Link>
 

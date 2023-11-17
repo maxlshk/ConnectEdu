@@ -18,13 +18,16 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 
 import { CommentValidation } from "@/lib/validations/thread";
-import { addCommentToThread } from "@/lib/actions/thread.actions";
+import { createMessage } from "@/lib/actions/message.actions";
+import User from "@/lib/models/user.model";
 
 interface Props {
     currentUserImg: string;
+    currentUser: string;
+    otherUser: string;
 }
 
-function ChatMessage({ currentUserImg }: Props) {
+function ChatMessage({ currentUserImg, currentUser, otherUser }: Props) {
     const pathname = usePathname();
 
     const form = useForm<z.infer<typeof CommentValidation>>({
@@ -35,13 +38,22 @@ function ChatMessage({ currentUserImg }: Props) {
     });
 
     const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
+        await createMessage({
+            sender: currentUser,
+            recipient: otherUser,
+            text: values.thread,
+            file: null,
+            path: pathname
+        });
 
         form.reset();
     };
 
     return (
         <Form {...form}>
-            <form className='comment-form'>
+            <form
+                className='comment-form'
+                onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                     control={form.control}
                     name='thread'

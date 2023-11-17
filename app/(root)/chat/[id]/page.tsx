@@ -5,6 +5,7 @@ import { fetchUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import ChatMessage from "@/components/shared/ChatMessage";
 import Link from "next/link";
+import { fetchMessagesBetweenUsers } from "@/lib/actions/message.actions";
 
 
 async function TopBar({ params }: { params: { id: string } }) {
@@ -41,18 +42,24 @@ async function TopBar({ params }: { params: { id: string } }) {
     );
 }
 
-function MessageArea({ messages }: { messages: any[] }) {
-    return (
+function MessageArea({ messages, currentUser }: { messages: any[], currentUser: string }) {
+    return messages && (
         <div className="flex-grow overflow-y-auto p-4 h-80 w-auto custom-scrollbar">
             {messages.map((message) => (
-                <div key={message.id} className={`mb-3 flex w-auto ${message.sender === "me" ? "justify-end" : ""}`}>
-                    <article className={`flex w-auto flex-col rounded-xl p-4 max-w-md ${message.sender === "me" ? "bg-gradient-to-r from-purple-950 to-indigo-900" : "bg-gradient-to-l from-dark-4 to-dark-3"}`}>
-                        <p className={`flex text-base-semibold w-auto text-light-1 ${message.sender === "me" ? "justify-end" : "justify-start"}`}>{message.text}</p>
+                <div key={message.id} className={`mb-3 flex w-auto ${message.sender === currentUser ? "justify-end" : ""}`}>
+                    <article className={`flex w-auto flex-col rounded-xl p-4 max-w-md ${message.sender === currentUser ? "bg-gradient-to-r from-purple-950 to-indigo-900" : "bg-gradient-to-l from-dark-4 to-dark-3"}`}>
+                        <p className={`flex text-base-semibold w-auto text-light-1 ${message.sender === currentUser ? "justify-end" : "justify-start"}`}>{message.text}</p>
                     </article>
                 </div>
             ))}
         </div>
-    );
+    ) || (
+            <div className="flex-grow overflow-y-auto p-4 h-80 w-auto custom-scrollbar">
+                <div className="flex justify-center items-center h-full">
+                    <p className="text-light-1">No messages yet</p>
+                </div>
+            </div>
+        );
 }
 
 
@@ -64,14 +71,14 @@ async function ChatPage({ params }: { params: { id: string } }) {
     const userInfo = await fetchUser(params.id);
     if (!userInfo?.onboarded) redirect("/onboarding");
 
-    // Mock messages for demonstration purposes
-    const messages = [
-        { id: 1, text: "Hello!", sender: "them" },
-        { id: 2, text: "Nice to meet you.", sender: "them" },
-        { id: 3, text: "Do you need any help?", sender: "them" },
-        { id: 4, text: "Nice to meet you too.", sender: "me" },
-        { id: 5, text: "I wanted you to check my recent home asignment and give some feedback on it.", sender: "me" }
-    ];
+    const messages = await fetchMessagesBetweenUsers(user.id, userInfo.id);
+    // [
+    //     { id: 1, text: "Hello!", sender: "them" },
+    //     { id: 2, text: "Nice to meet you.", sender: "them" },
+    //     { id: 3, text: "Do you need any help?", sender: "them" },
+    //     { id: 4, text: "Nice to meet you too.", sender: "me" },
+    //     { id: 5, text: "I wanted you to check my recent home asignment and give some feedback on it.", sender: "me" }
+    // ];
 
     if (!user || !userInfo?.onboarded) return null;
 
@@ -79,9 +86,16 @@ async function ChatPage({ params }: { params: { id: string } }) {
         <div className="flex flex-col">
 
             <TopBar params={userInfo} />
-            <MessageArea messages={messages} />
+            <MessageArea
+                messages={messages}
+                currentUser={user.id}
+            />
             <div className="">
-                <ChatMessage currentUserImg={user.imageUrl} />
+                <ChatMessage
+                    currentUserImg={user.imageUrl}
+                    currentUser={user.id}
+                    otherUser={userInfo.id}
+                />
             </div>
         </div>
     );
