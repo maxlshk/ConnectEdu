@@ -3,7 +3,7 @@
 import { z } from "zod";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -15,11 +15,14 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "../ui/input";
+import { ChatImageInput } from "../ui/chatInput";
 import { Button } from "../ui/button";
+import { ChangeEvent, useState } from "react";
 
-import { CommentValidation } from "@/lib/validations/thread";
+import { MessageValidation } from "@/lib/validations/thread";
 import { createMessage } from "@/lib/actions/message.actions";
-import User from "@/lib/models/user.model";
+import { useUploadThing } from "@/lib/uploadthing";
+import { isBase64Image } from "@/lib/utils";
 
 interface Props {
     currentUserImg: string;
@@ -29,24 +32,62 @@ interface Props {
 
 function ChatMessage({ currentUserImg, currentUser, otherUser }: Props) {
     const pathname = usePathname();
+    const { startUpload } = useUploadThing("media");
 
-    const form = useForm<z.infer<typeof CommentValidation>>({
-        resolver: zodResolver(CommentValidation),
+    const [files, setFiles] = useState<File[]>([]);
+
+    const form = useForm<z.infer<typeof MessageValidation>>({
+        resolver: zodResolver(MessageValidation),
         defaultValues: {
-            thread: "",
+            message: "",
+            file: "",
         },
     });
 
-    const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
+    const onSubmit = async (values: z.infer<typeof MessageValidation>) => {
+        const blob = values.file;
+
+        const hasImage = isBase64Image(blob);
+        if (hasImage) {
+            const imgRes = await startUpload(files);
+
+            if (imgRes && imgRes[0].fileUrl) {
+                values.file = imgRes[0].fileUrl;
+            }
+        }
+
         await createMessage({
             sender: currentUser,
             recipient: otherUser,
-            text: values.thread,
-            file: null,
+            text: values.message,
+            file: values.file,
             path: pathname
         });
 
         form.reset();
+    };
+
+    const handleImage = (
+        e: ChangeEvent<HTMLInputElement>,
+        fieldChange: (value: string) => void
+    ) => {
+        e.preventDefault();
+
+        const fileReader = new FileReader();
+
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            setFiles(Array.from(e.target.files));
+
+            if (!file.type.includes("image")) return;
+
+            fileReader.onload = async (event) => {
+                const imageDataUrl = event.target?.result?.toString() || "";
+                fieldChange(imageDataUrl);
+            };
+
+            fileReader.readAsDataURL(file);
+        }
     };
 
     return (
@@ -56,7 +97,7 @@ function ChatMessage({ currentUserImg, currentUser, otherUser }: Props) {
                 onSubmit={form.handleSubmit(onSubmit)}>
                 <FormField
                     control={form.control}
-                    name='thread'
+                    name='message'
                     render={({ field }) => (
                         <FormItem className='flex w-full items-center gap-3'>
                             <FormLabel>
@@ -78,6 +119,36 @@ function ChatMessage({ currentUserImg, currentUser, otherUser }: Props) {
                             </FormControl>
                         </FormItem>
                     )}
+                />
+                <FormField
+                    control={form.control}
+                    name='file'
+                    render={({ field }) => (
+                        <FormItem className='flex items-center'>
+                            <FormLabel>
+                                {field.value ? (
+                                    <Image
+                                        src={field.value}
+                                        alt='file'
+                                        width={296}
+                                        height={296}
+                                        priority
+                                        className='object-contain rounded-md'
+                                    />
+                                ) : (<></>)}
+                            </FormLabel>
+                            <FormControl>
+                                <Input
+                                    type='file'
+                                    accept='image/*'
+                                    placeholder='Add file'
+                                    className='opacity-0 w-1.5 cursor-pointer right-0 chat-image-input'
+                                    onChange={(e) => handleImage(e, field.onChange)}
+                                />
+                            </FormControl>
+                        </FormItem>
+                    )}
+
                 />
                 <div className='flex cursor-pointer gap-3 mx-3 px-2 py-2'>
                     <Image

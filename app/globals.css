@@ -147,6 +147,12 @@
   @apply cursor-pointer border-none bg-transparent outline-none file:text-blue !important;
 }
 
+.chat-image-input {
+  position: relative;
+  right: -4rem;
+  z-index: 10;
+}
+
 .account-form_input {
   @apply border border-dark-4 bg-dark-3 text-light-1 !important;
 }
