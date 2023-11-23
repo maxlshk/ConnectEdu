@@ -10,6 +10,6 @@ export const CommentValidation = z.object({
 });
 
 export const MessageValidation = z.object({
-  message: z.string().nonempty().min(3, { message: "Minimum 3 characters." }),
-  file: z.string().url().nonempty(),
+  message: z.string().nonempty().min(1, { message: "Minimum 3 characters." }),
+  file: z.string().url().optional(),
 });

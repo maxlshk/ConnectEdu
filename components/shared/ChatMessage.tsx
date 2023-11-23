@@ -40,27 +40,30 @@ function ChatMessage({ currentUserImg, currentUser, otherUser }: Props) {
         resolver: zodResolver(MessageValidation),
         defaultValues: {
             message: "",
-            file: "",
+            file: undefined,
         },
     });
 
     const onSubmit = async (values: z.infer<typeof MessageValidation>) => {
         const blob = values.file;
+        if (blob === undefined || blob == null) {
+            const hasImage = false;
+        } else {
+            const hasImage = isBase64Image(blob);
+            if (hasImage) {
+                const imgRes = await startUpload(files);
 
-        const hasImage = isBase64Image(blob);
-        if (hasImage) {
-            const imgRes = await startUpload(files);
-
-            if (imgRes && imgRes[0].fileUrl) {
-                values.file = imgRes[0].fileUrl;
+                if (imgRes && imgRes[0].fileUrl) {
+                    values.file = imgRes[0].fileUrl;
+                }
             }
         }
 
         await createMessage({
             sender: currentUser,
             recipient: otherUser,
-            text: values.message,
-            file: values.file,
+            text: values.message ? values.message : "",
+            file: values.file ? values.file : "",
             path: pathname
         });
 

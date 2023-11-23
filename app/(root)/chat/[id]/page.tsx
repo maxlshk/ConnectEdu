@@ -42,6 +42,37 @@ async function TopBar({ params }: { params: { id: string } }) {
     );
 }
 
+function formatTimestamp(createdAt: string) {
+    const messageDate = new Date(createdAt);
+    const today = new Date();
+
+    if (
+        messageDate.getDate() === today.getDate() &&
+        messageDate.getMonth() === today.getMonth() &&
+        messageDate.getFullYear() === today.getFullYear()
+    ) {
+        return `Today, ${messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (
+        messageDate.getDate() === yesterday.getDate() &&
+        messageDate.getMonth() === yesterday.getMonth() &&
+        messageDate.getFullYear() === yesterday.getFullYear()
+    ) {
+        return `Yesterday, ${messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    if (messageDate >= yesterday && messageDate >= today) {
+        return `${messageDate.toLocaleDateString('en-US', { weekday: 'short' })}, ${messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    return `${messageDate.toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })} ${messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+
+
 function MessageArea({ messages, currentUser }: { messages: any[], currentUser: string }) {
     return messages.length > 0 ? (
         <div className="flex-grow overflow-y-auto p-4 h-80 w-auto custom-scrollbar">
@@ -49,18 +80,23 @@ function MessageArea({ messages, currentUser }: { messages: any[], currentUser: 
                 <div key={message.id} className={`mb-3 flex w-auto ${message.sender === currentUser ? "justify-end" : ""}`}>
                     <article className={`flex w-auto flex-col rounded-xl p-4 max-w-md ${message.sender === currentUser ? "bg-gradient-to-r from-purple-950 to-indigo-900" : "bg-gradient-to-l from-dark-4 to-dark-3"}`}>
                         {message.file != "" && (
-                            <Image
-                                src={message.file}
-                                alt='file'
-                                width={296}
-                                height={296}
-                                priority
-                                className='object-contain rounded-md mb-2'
-                            />
+                            <a href={message.file} target="_blank" rel="noopener noreferrer">
+                                <Image
+                                    src={message.file}
+                                    alt='file'
+                                    width={1080}
+                                    height={1080}
+                                    priority
+                                    className='object-contain rounded-md mb-2 w-auto h-auto'
+                                />
+                            </a>
                         )}
                         <p className={`flex text-base-semibold w-auto text-light-1 ${message.sender === currentUser ? "justify-end" : "justify-start"}`}>
                             {message.text}
                         </p>
+                        <span className={`flex text-tiny-medium mt-2 text-gray-500 ${message.sender === currentUser ? "justify-start" : "justify-end"}`}>
+                            {formatTimestamp(message.createdAt)}
+                        </span>
                     </article>
                 </div>
             ))}
