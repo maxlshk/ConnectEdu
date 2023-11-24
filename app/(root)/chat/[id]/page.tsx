@@ -11,7 +11,7 @@ import { fetchMessagesBetweenUsers } from "@/lib/actions/message.actions";
 async function TopBar({ params }: { params: { id: string } }) {
     const userInfo = await fetchUser(params.id);
     return (
-        <div className="flex items-center justify-between p-4 text-white rounded-md bg-glassmorphism backdrop-blur-lg">
+        <div className="flex items-center justify-between p-4 mb-3 text-white rounded-md bg-glassmorphism backdrop-blur-lg">
             <div className='user-card_avatar'>
                 <div className='relative h-12 w-12'>
                     <Link href={`/profile/${userInfo.id}`}>
@@ -75,7 +75,7 @@ function formatTimestamp(createdAt: string) {
 
 function MessageArea({ messages, currentUser }: { messages: any[], currentUser: string }) {
     return messages.length > 0 ? (
-        <div className="flex-grow overflow-y-auto p-4 h-80 w-auto custom-scrollbar">
+        <div className="flex-grow overflow-y-auto w-auto custom-scrollbar">
             {messages.map((message) => (
                 <div key={message.id} className={`mb-3 flex w-auto ${message.sender === currentUser ? "justify-end" : ""}`}>
                     <article className={`flex w-auto flex-col rounded-xl p-4 max-w-md ${message.sender === currentUser ? "bg-gradient-to-r from-purple-950 to-indigo-900" : "bg-gradient-to-l from-dark-4 to-dark-3"}`}>
@@ -126,7 +126,7 @@ async function ChatPage({ params }: { params: { id: string } }) {
     if (!user || !userInfo?.onboarded) return null;
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col chat-main-field ">
 
             <TopBar params={userInfo} />
             <MessageArea
