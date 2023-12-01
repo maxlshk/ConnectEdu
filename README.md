@@ -1,31 +1,15 @@
-# Build and Deploy a Full Stack MERN Next.js 13 Threads App | React, Next JS, TypeScript, MongoDB
-![Threads](https://i.ibb.co/2dSC0TQ/Thumbnail-1.png)
+# Full Stack MERN Next.js 13 Threads App | React, Next JS, TypeScript, MongoDB 
 
-### [🌟 Become a top 1% Next.js 13 developer in only one course](https://jsmastery.pro/next13)
-### [🚀 Land your dream programming job in 6 months](https://jsmastery.pro/masterclass)
+Leave a star if you like it <3
 
-## Next.js 13 eBook & Course
-📚 https://resource.jsmastery.pro/nextjs-guide
+# Live Demo:
+https://connect-edu.vercel.app/
 
-## Summary
-Develop Threads, Next.js 13 app that skyrocketed to 100 million sign-ups in less than 5 days, and dethroned giants like Twitter, ChatGPT, and TikTok to become the fastest-growing app ever!
+![image](https://github.com/maxlshk/ConnectEdu/assets/119050285/4783afd9-7e75-48a9-a76a-7d85f1b26ad6)
+![image](https://github.com/maxlshk/ConnectEdu/assets/119050285/e9484b90-271c-4ade-961c-31251a1514c6)
+![image](https://github.com/maxlshk/ConnectEdu/assets/119050285/f1756cb1-f153-49a3-a897-8ba9bd8f54fa)
+![image](https://github.com/maxlshk/ConnectEdu/assets/119050285/9d981b10-32b1-4458-b5cd-ef5f450ca857)
 
-In this video, you'll:
-- Master Next.js 13.4 with Server Side Rendering
-- Learn MongoDB handling of complex schemas, multiple data population
-- Create beautiful layouts with TailwindCSS
-- Use Clerk for authentication
-- Handle file uploads with UploadThing
-- Explore Shadcn components
-- Listen to real-time events with webhooks
-- Understand middleware, API actions, and authorization
-- Explore & integrate new Next.js layout route groups
-- Validate data with Zod
-- Manage forms with react hook form
-- Create reusable components
-- Build a solid application architecture
-- Deploy the application and more!
 
-## Want to land your dream programming job in 3 - 6 months?
-⭐ JSM Masterclass Experience - https://jsmastery.pro/masterclass
-Become a Software Engineer. Guaranteed.
+
+
