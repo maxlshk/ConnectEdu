@@ -25,13 +25,6 @@ export async function createMessage({ sender, recipient, text, file, path }: Par
             file: file, // Store file or null if not provided
         });
 
-        // Update User model for the sender and recipient
-        // await User.updateMany(
-        //     { _id: { $in: [sender, recipient] } },
-        //     { $push: { messages: createdMessage._id } }
-        // );
-
-
         revalidatePath(path);
 
     } catch (error: any) {
